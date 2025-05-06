@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bilibili.backend.mapper.UserMapper">
+    <resultMap id="BaseResultMap" type="com.bilibili.backend.entity.User">
+        <id column="id" property="id"/>
+        <result column="username" property="username"/>
+        <result column="password" property="password"/>
+        <result column="nickname" property="nickname"/>
+        <result column="avatar" property="avatar"/>
+        <result column="email" property="email"/>
+        <result column="status" property="status"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+    </resultMap>
+
+    <select id="selectByUsername" resultMap="BaseResultMap">
+        SELECT * FROM user WHERE username = #{username}
+    </select>
+
+    <select id="findById" resultMap="BaseResultMap">
+        SELECT * FROM user WHERE id = #{id}
+    </select>
+
+    <select id="findAll" resultMap="BaseResultMap">
+        SELECT * FROM user
+    </select>
+</mapper> 

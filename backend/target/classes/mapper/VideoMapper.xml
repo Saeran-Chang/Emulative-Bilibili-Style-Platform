@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bilibili.backend.mapper.VideoMapper">
+    <resultMap id="BaseResultMap" type="com.bilibili.backend.entity.Video">
+        <id column="id" property="id"/>
+        <result column="title" property="title"/>
+        <result column="description" property="description"/>
+        <result column="file_path" property="filePath"/>
+        <result column="cover_path" property="coverPath"/>
+        <result column="author_id" property="authorId"/>
+        <result column="duration" property="duration"/>
+        <result column="views" property="views"/>
+        <result column="likes" property="likes"/>
+        <result column="collects" property="collects"/>
+        <result column="shares" property="shares"/>
+        <result column="status" property="status"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+    </resultMap>
+
+    <select id="selectAll" resultMap="BaseResultMap">
+        SELECT v.*, 
+            (SELECT COUNT(*) FROM favorites f WHERE f.video_id = v.id) as collects
+        FROM video v 
+        WHERE v.status = 1 
+        ORDER BY v.create_time DESC
+    </select>
+
+    <select id="selectById" resultMap="BaseResultMap">
+        SELECT v.*, 
+            (SELECT COUNT(*) FROM favorites f WHERE f.video_id = v.id) as collects
+        FROM video v 
+        WHERE v.id = #{id} AND v.status = 1
+    </select>
+
+    <insert id="insert" parameterType="com.bilibili.backend.entity.Video" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO video (
+            title, description, file_path, cover_path, author_id, 
+            duration, views, likes, collects, shares, status, create_time, update_time
+        ) VALUES (
+            #{title}, #{description}, #{filePath}, #{coverPath}, #{authorId},
+            #{duration}, #{views}, #{likes}, #{collects}, #{shares}, #{status},
+            NOW(), NOW()
+        )
+    </insert>
+
+    <update id="update" parameterType="com.bilibili.backend.entity.Video">
+        UPDATE video
+        SET title = #{title},
+            description = #{description},
+            file_path = #{filePath},
+            cover_path = #{coverPath},
+            author_id = #{authorId},
+            duration = #{duration},
+            views = #{views},
+            likes = #{likes},
+            collects = #{collects},
+            shares = #{shares},
+            status = #{status},
+            update_time = NOW()
+        WHERE id = #{id}
+    </update>
+
+    <update id="deleteById" parameterType="java.lang.Long">
+        UPDATE video SET status = 0 WHERE id = #{id}
+    </update>
+
+    <update id="increaseLikes" parameterType="java.lang.Long">
+        UPDATE video SET likes = likes + 1 WHERE id = #{videoId}
+    </update>
+
+    <update id="decreaseLikes" parameterType="java.lang.Long">
+        UPDATE video SET likes = likes - 1 WHERE id = #{videoId}
+    </update>
+
+    <update id="increaseCollects" parameterType="java.lang.Long">
+        UPDATE video SET collects = collects + 1 WHERE id = #{videoId}
+    </update>
+
+    <update id="decreaseCollects" parameterType="java.lang.Long">
+        UPDATE video 
+        SET collects = GREATEST(collects - 1, 0)
+        WHERE id = #{videoId}
+    </update>
+
+    <update id="increaseViews" parameterType="java.lang.Long">
+        UPDATE video SET views = views + 1 WHERE id = #{videoId}
+    </update>
+
+    <update id="increaseShares" parameterType="java.lang.Long">
+        UPDATE video SET shares = shares + 1 WHERE id = #{videoId}
+    </update>
+</mapper> 

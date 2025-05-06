@@ -1,0 +1,55 @@
+server:
+  port: 8080
+
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/bilibili?useSSL=false&serverTimezone=UTC
+    username: root
+    password: 1234
+    initialization-mode: always
+    schema: classpath:db/schema.sql
+  redis:
+    host: localhost
+    port: 6379
+    database: 0
+    timeout: 10000
+    lettuce:
+      pool:
+        max-active: 8
+        max-wait: -1
+        max-idle: 8
+        min-idle: 0
+  servlet:
+    multipart:
+      max-file-size: 2GB
+      max-request-size: 2GB
+      enabled: true
+  mvc:
+    static-path-pattern: /uploads/**
+  web:
+    resources:
+      static-locations: file:${upload.path}
+  file:
+    upload-dir: ${upload.path}
+
+jwt:
+  secret: "bilibili-secret-key-2024-this-is-a-very-long-secret-key-for-jwt"
+  expiration: 86400000 # 24小时
+
+mybatis:
+  mapper-locations: classpath:mapper/*.xml
+  type-aliases-package: com.bilibili.backend.entity
+  configuration:
+    map-underscore-to-camel-case: true
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+
+logging:
+  level:
+    root: INFO
+    com.bilibili.backend: DEBUG
+    org.springframework.web: DEBUG
+    org.mybatis: DEBUG
+
+upload:
+  path: D:/Documents/Code/Python/Cusor_MCP/Bilibili/uploads 

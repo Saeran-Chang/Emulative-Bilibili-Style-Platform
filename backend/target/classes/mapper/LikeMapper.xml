@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bilibili.backend.mapper.LikeMapper">
+    <resultMap id="BaseResultMap" type="com.bilibili.backend.entity.Like">
+        <id column="id" property="id"/>
+        <result column="user_id" property="userId"/>
+        <result column="video_id" property="videoId"/>
+        <result column="create_time" property="createTime"/>
+    </resultMap>
+
+    <select id="selectByUserIdAndVideoId" resultMap="BaseResultMap">
+        SELECT * FROM `like` WHERE user_id = #{userId} AND video_id = #{videoId}
+    </select>
+
+    <insert id="insert" parameterType="com.bilibili.backend.entity.Like" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO `like` (user_id, video_id)
+        VALUES (#{userId}, #{videoId})
+    </insert>
+
+    <delete id="delete">
+        DELETE FROM `like` WHERE user_id = #{userId} AND video_id = #{videoId}
+    </delete>
+
+    <select id="countByVideoId" resultType="int">
+        SELECT COUNT(*) FROM `like` WHERE video_id = #{videoId}
+    </select>
+</mapper> 
